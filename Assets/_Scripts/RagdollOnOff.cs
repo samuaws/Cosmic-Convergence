@@ -16,7 +16,6 @@ public class RagdollOnOff : MonoBehaviour
         anim = GetComponent<Animator>();
         GetRigComponenets();
         RagdollOff();
-        rb.velocity = Vector3.forward;
 
     }
     public Collider[] rigColliders;

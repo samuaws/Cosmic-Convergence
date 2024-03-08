@@ -22,7 +22,7 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
-        if (dead) return;
+        if (dead || !navMeshAgent.enabled) return;
 
         float distanceToTarget = Vector3.Distance(transform.position, target.position);
 
@@ -59,6 +59,13 @@ public class EnemyAI : MonoBehaviour
             navMeshAgent.SetDestination(transform.position);
             animator.SetBool("isWalking", false);
             animator.SetBool("attack", false);
+        }
+    }
+    public void StopFollow()
+    {
+        if(navMeshAgent != null)
+        {
+            navMeshAgent.enabled = false;
         }
     }
 

@@ -93,15 +93,16 @@ public class Abilities : MonoBehaviour
     public void Supernova()
     {
         spellToSpawn = supernova;
-        abilityPlaceholder = supernovaPlaceholder;
+        placeholderPrefab = supernovaPlaceholder;
         spellDuration = 2;
         TogleCasting();
     }
     public void Blackhole()
     {
         spellToSpawn = blackhole;
-        abilityPlaceholder = blackholePlaceholder;
-        spellDuration = 2;
+        placeholderPrefab = blackholePlaceholder;
+        spellSpawnOffset = new Vector3 (0, 1.5f, 0);
+        spellDuration = 5;
         TogleCasting();
     }
     public void CastAbility()
