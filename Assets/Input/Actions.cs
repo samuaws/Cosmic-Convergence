@@ -44,6 +44,24 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Blackhole"",
+                    ""type"": ""Button"",
+                    ""id"": ""f310d3dc-0ac0-4148-b582-11779618712e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Wormhole"",
+                    ""type"": ""Button"",
+                    ""id"": ""d3409079-7d72-45e8-a8a8-0ef64c6514ac"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -68,6 +86,28 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""action"": ""CastSpell"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ed6d457b-1d21-4b6c-837b-31b41e12d01d"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Blackhole"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ad790480-7188-48e0-8039-33a89faf5a13"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Wormhole"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -78,6 +118,8 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         m_Abelities = asset.FindActionMap("Abelities", throwIfNotFound: true);
         m_Abelities_Supernova = m_Abelities.FindAction("Supernova", throwIfNotFound: true);
         m_Abelities_CastSpell = m_Abelities.FindAction("CastSpell", throwIfNotFound: true);
+        m_Abelities_Blackhole = m_Abelities.FindAction("Blackhole", throwIfNotFound: true);
+        m_Abelities_Wormhole = m_Abelities.FindAction("Wormhole", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -141,12 +183,16 @@ public partial class @Actions: IInputActionCollection2, IDisposable
     private List<IAbelitiesActions> m_AbelitiesActionsCallbackInterfaces = new List<IAbelitiesActions>();
     private readonly InputAction m_Abelities_Supernova;
     private readonly InputAction m_Abelities_CastSpell;
+    private readonly InputAction m_Abelities_Blackhole;
+    private readonly InputAction m_Abelities_Wormhole;
     public struct AbelitiesActions
     {
         private @Actions m_Wrapper;
         public AbelitiesActions(@Actions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Supernova => m_Wrapper.m_Abelities_Supernova;
         public InputAction @CastSpell => m_Wrapper.m_Abelities_CastSpell;
+        public InputAction @Blackhole => m_Wrapper.m_Abelities_Blackhole;
+        public InputAction @Wormhole => m_Wrapper.m_Abelities_Wormhole;
         public InputActionMap Get() { return m_Wrapper.m_Abelities; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -162,6 +208,12 @@ public partial class @Actions: IInputActionCollection2, IDisposable
             @CastSpell.started += instance.OnCastSpell;
             @CastSpell.performed += instance.OnCastSpell;
             @CastSpell.canceled += instance.OnCastSpell;
+            @Blackhole.started += instance.OnBlackhole;
+            @Blackhole.performed += instance.OnBlackhole;
+            @Blackhole.canceled += instance.OnBlackhole;
+            @Wormhole.started += instance.OnWormhole;
+            @Wormhole.performed += instance.OnWormhole;
+            @Wormhole.canceled += instance.OnWormhole;
         }
 
         private void UnregisterCallbacks(IAbelitiesActions instance)
@@ -172,6 +224,12 @@ public partial class @Actions: IInputActionCollection2, IDisposable
             @CastSpell.started -= instance.OnCastSpell;
             @CastSpell.performed -= instance.OnCastSpell;
             @CastSpell.canceled -= instance.OnCastSpell;
+            @Blackhole.started -= instance.OnBlackhole;
+            @Blackhole.performed -= instance.OnBlackhole;
+            @Blackhole.canceled -= instance.OnBlackhole;
+            @Wormhole.started -= instance.OnWormhole;
+            @Wormhole.performed -= instance.OnWormhole;
+            @Wormhole.canceled -= instance.OnWormhole;
         }
 
         public void RemoveCallbacks(IAbelitiesActions instance)
@@ -193,5 +251,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
     {
         void OnSupernova(InputAction.CallbackContext context);
         void OnCastSpell(InputAction.CallbackContext context);
+        void OnBlackhole(InputAction.CallbackContext context);
+        void OnWormhole(InputAction.CallbackContext context);
     }
 }

@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Abilities : MonoBehaviour
 {
-    public GameObject effectPrefab;
     public float sphereCastRadius = 0.5f;
     public float sphereCastDistance = 10f;
 
@@ -12,10 +11,14 @@ public class Abilities : MonoBehaviour
 
     private GameObject spellToSpawn;
     public GameObject supernova;
+    public GameObject supernovaPlaceholder;
+    private GameObject placeholderPrefab;
+    public GameObject blackhole;
+    public GameObject blackholePlaceholder;
+
     private Vector3 spellPosition;
     private Vector3 spellSpawnOffset = new Vector3(0,1.2f,0);
     private float spellDuration;
-    public RagdollOnOff rag;
 
     public enum Spells
     {
@@ -47,7 +50,7 @@ public class Abilities : MonoBehaviour
                 // Instantiate prefab at the point of contact
                 if (abilityPlaceholder == null)
                 {
-                    abilityPlaceholder = Instantiate(effectPrefab, hit.point, Quaternion.identity);
+                    abilityPlaceholder = Instantiate(placeholderPrefab, hit.point, Quaternion.identity);
                 }
                 else
                 {
@@ -69,7 +72,7 @@ public class Abilities : MonoBehaviour
                     // Instantiate prefab at the point of contact
                     if (abilityPlaceholder == null)
                     {
-                        abilityPlaceholder = Instantiate(effectPrefab, edgeHit.point, Quaternion.identity);
+                        abilityPlaceholder = Instantiate(placeholderPrefab, edgeHit.point, Quaternion.identity);
                     }
                     else
                     {
@@ -90,6 +93,14 @@ public class Abilities : MonoBehaviour
     public void Supernova()
     {
         spellToSpawn = supernova;
+        abilityPlaceholder = supernovaPlaceholder;
+        spellDuration = 2;
+        TogleCasting();
+    }
+    public void Blackhole()
+    {
+        spellToSpawn = blackhole;
+        abilityPlaceholder = blackholePlaceholder;
         spellDuration = 2;
         TogleCasting();
     }
