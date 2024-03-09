@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,6 +10,7 @@ public class EnemyAI : MonoBehaviour
     public float movementSpeed = 5f; // Speed at which the enemy moves
     public float rotationSpeed = 5f; // Speed at which the enemy rotates towards the target
 
+    public Transform childToMatch;
     private NavMeshAgent navMeshAgent;
     private Animator animator;
     private bool dead = false;
@@ -66,7 +68,40 @@ public class EnemyAI : MonoBehaviour
         if(navMeshAgent != null)
         {
             navMeshAgent.enabled = false;
+            animator.SetBool("isWalking", false);
         }
+    }
+    public void ContinueFollow()
+    {
+        if(navMeshAgent != null)
+        {
+            navMeshAgent.enabled = true;
+        }
+    }
+    public void GetUp()
+    {
+        StartCoroutine(GetUpCouroutine());
+    }
+    private void ResetParentPosition()
+    {
+        
+        Vector3 offset = (new Vector3(childToMatch.position.x, 0, childToMatch.position.z) - transform.position) ; 
+        transform.position = new Vector3(childToMatch.position.x, 0, childToMatch.position.z);
+        foreach (Transform child in transform)
+        {
+            child.position -= offset;
+        }
+    }
+    private IEnumerator GetUpCouroutine()
+    {
+        print("Getting up");
+        yield return new WaitForSeconds(1);
+        GetComponent<RagdollOnOff>().RagdollOff();
+        ResetParentPosition();
+        animator.Play("GettingUp",-1,0);
+        animator.enabled = true;
+        yield return new WaitForSeconds(7.3f);
+        ContinueFollow();
     }
 
     public void Die()

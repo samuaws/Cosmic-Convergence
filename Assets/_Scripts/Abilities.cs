@@ -45,8 +45,6 @@ public class Abilities : MonoBehaviour
             RaycastHit hit;
             if (Physics.SphereCast(cam.transform.position, sphereCastRadius, cam.transform.forward, out hit, sphereCastDistance))
             {
-                // Sphere cast hit something
-                Debug.Log("Sphere cast hit: " + hit.point);
                 // Instantiate prefab at the point of contact
                 if (abilityPlaceholder == null)
                 {

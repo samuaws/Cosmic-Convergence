@@ -31,7 +31,7 @@ public class RagdollOnOff : MonoBehaviour
     {
        // rb.isKinematic = false;
         mainCollider.enabled = true;
-        anim.enabled = true;
+        //anim.enabled = true;
 
         foreach (Collider collider in rigColliders)
         {
