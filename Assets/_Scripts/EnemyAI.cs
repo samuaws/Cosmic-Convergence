@@ -95,7 +95,7 @@ public class EnemyAI : MonoBehaviour
     private IEnumerator GetUpCouroutine()
     {
         print("Getting up");
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         GetComponent<RagdollOnOff>().RagdollOff();
         ResetParentPosition();
         animator.Play("GettingUp",-1,0);

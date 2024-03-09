@@ -21,21 +21,22 @@ public class Blackhole : MonoBehaviour
         }
         foreach (Collider col in colidersToPull)
         {
-            if (col.transform.root.CompareTag("Enemy"))
-            {
-
-                Rigidbody rb = col.GetComponent<Rigidbody>();
-                if (rb != null)
+            if (col) 
+            { 
+                if (col.transform.root.CompareTag("Enemy"))
                 {
-                    rb.transform.root.GetComponent<Rigidbody>().isKinematic = false;
-                    rb.transform.root.GetComponent<EnemyAI>().StopFollow();
-                    rb.transform.root.GetComponent<EnemyAI>().StopAllCoroutines();
-                    rb.transform.root.GetComponent<RagdollOnOff>().RagdollOn();
 
+                    Rigidbody rb = col.GetComponent<Rigidbody>();
+                    if (rb != null)
+                    {
+                        rb.transform.root.GetComponent<Rigidbody>().isKinematic = false;
+                        rb.transform.root.GetComponent<EnemyAI>().StopFollow();
+                        rb.transform.root.GetComponent<EnemyAI>().StopAllCoroutines();
+                        rb.transform.root.GetComponent<RagdollOnOff>().RagdollOn();
                         Vector3 direction = transform.position - col.transform.position;
                         rb.AddForce(direction.normalized * pullForce);
-
-                    // Apply force towards the blackhole
+                        rb.tag = "Enemy";
+                    }
                 }
             }
         }
@@ -47,14 +48,17 @@ public class Blackhole : MonoBehaviour
 
         foreach (Collider col in colidersToPull)
         {
-            Transform root = col.transform.root;
-            if (!processedRoots.Contains(root))
+            if (col)
             {
-                processedRoots.Add(root);
-
-                if (root.CompareTag("Enemy"))
+                Transform root = col.transform.root;
+                if (!processedRoots.Contains(root))
                 {
-                   root.GetComponent<EnemyAI>().GetUp();  
+                    processedRoots.Add(root);
+
+                    if (root.CompareTag("Enemy"))
+                    {
+                       root.GetComponent<EnemyAI>().GetUp();  
+                    }
                 }
             }
         }

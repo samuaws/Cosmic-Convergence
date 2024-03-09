@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Bomb : MonoBehaviour
@@ -16,20 +17,43 @@ public class Bomb : MonoBehaviour
 
         foreach (Collider hit in colliders)
         {
+            HashSet<Transform> processedRoots = new HashSet<Transform>();
             if (hit.CompareTag("Enemy"))
             {
-                Rigidbody rb = hit.GetComponent<Rigidbody>();
-                if (rb != null)
+                Transform root = hit.transform.root;
+                if (!processedRoots.Contains(root))
                 {
-                    rb.isKinematic = false;
-                    rb.gameObject.GetComponent<RagdollOnOff>().RagdollOn();
-                    foreach (Rigidbody rigid in rb.gameObject.GetComponent<RagdollOnOff>().rigRigids)
+                    processedRoots.Add(root);
+
+                    if (root.CompareTag("Enemy"))
                     {
-                        rigid.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+                        DamageEnemy(root.GetComponent<Collider>());
                     }
-                    rb.gameObject.GetComponent<EnemyAI>().Die();
                 }
             }
+        }
+    }
+    void DamageEnemy(Collider hit)
+    {
+        Rigidbody rb = hit.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.gameObject.GetComponent<RagdollOnOff>().RagdollOn();
+            foreach (Rigidbody rigid in rb.gameObject.GetComponent<RagdollOnOff>().rigRigids)
+            {
+                rigid.gameObject.tag = "Enemy";
+                if (rigid.transform.parent)
+                {
+                    rigid.AddExplosionForce(explosionForce/11f, transform.position, explosionRadius);
+                }
+                else
+                {
+                    rigid.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+                }
+                
+            }
+            rb.gameObject.GetComponent<EnemyAI>().Die();
         }
     }
 
