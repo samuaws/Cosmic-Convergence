@@ -19,6 +19,8 @@ public class Abilities : MonoBehaviour
     private GameObject placeholderPrefab;
     public GameObject blackhole;
     public GameObject blackholePlaceholder;
+    public GameObject hands;
+    private Animator handsAnimator;
 
     private GameObject spellToSpawn;
     private Spells spellToCast;
@@ -26,6 +28,7 @@ public class Abilities : MonoBehaviour
     private Vector3 spellSpawnOffset = new Vector3(0, 1.2f, 0);
     private float spellDuration;
     private float[] abilityCooldowns;
+    private string handsTrigger;
 
     public TextMeshProUGUI supernovaCooldownText;
     public TextMeshProUGUI blackholeCooldownText;
@@ -42,6 +45,7 @@ public class Abilities : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
+        handsAnimator = hands.GetComponent<Animator>();
         InitializeCooldowns();
     }
 
@@ -85,8 +89,6 @@ public class Abilities : MonoBehaviour
                 RaycastHit edgeHit;
                 if (Physics.Raycast(edgeRay, out edgeHit))
                 {
-                    // Ray from the edge of sphere cast hit the ground
-                    Debug.Log("Fallback ray hit ground at: " + edgeHit.point);
                     // Instantiate prefab at the point of contact
                     if (abilityPlaceholder == null)
                     {
@@ -139,6 +141,7 @@ public class Abilities : MonoBehaviour
             spellToSpawn = supernova;
             placeholderPrefab = supernovaPlaceholder;
             spellDuration = 2;
+            handsTrigger = "supernova";
             ToggleCasting();
         }
     }
@@ -152,6 +155,7 @@ public class Abilities : MonoBehaviour
             placeholderPrefab = blackholePlaceholder;
             spellSpawnOffset = new Vector3(0, 1.5f, 0);
             spellDuration = 5;
+            handsTrigger = "blackhole";
             ToggleCasting();
         }
     }
@@ -196,6 +200,7 @@ public class Abilities : MonoBehaviour
                 var spell = Instantiate(spellToSpawn, spellPosition + spellSpawnOffset, Quaternion.identity);
                 Destroy(spell, spellDuration);
                 StartCooldown(spellToCast);
+                handsAnimator.SetTrigger(handsTrigger);
                 ToggleCasting();
             }
         }
