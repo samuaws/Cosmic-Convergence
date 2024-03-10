@@ -9,6 +9,7 @@ public class EnemyAI : MonoBehaviour
     public float attackRange = 2f; // Range within which the enemy will attack the target
     public float movementSpeed = 5f; // Speed at which the enemy moves
     public float rotationSpeed = 5f; // Speed at which the enemy rotates towards the target
+    public int damage = 5;
 
     public Transform childToMatch;
     private NavMeshAgent navMeshAgent;
@@ -61,6 +62,14 @@ public class EnemyAI : MonoBehaviour
             navMeshAgent.SetDestination(transform.position);
             animator.SetBool("isWalking", false);
             animator.SetBool("attack", false);
+        }
+    }
+    public void DealDamage()
+    {
+        float distanceToTarget = Vector3.Distance(transform.position, target.position);
+        if (distanceToTarget <= attackRange)
+        {
+            GameManager.Instance.player.GetComponent<PlayerHealth>().TakeDamage(damage);
         }
     }
     public void StopFollow()
