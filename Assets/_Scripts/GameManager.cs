@@ -10,4 +10,8 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
     }
+    private void Start()
+    {
+        Physics.IgnoreLayerCollision(LayerMask.NameToLayer("EnergyBall"), LayerMask.NameToLayer("Enemy"));
+    }
 }

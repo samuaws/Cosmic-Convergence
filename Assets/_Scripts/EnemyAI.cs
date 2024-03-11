@@ -5,11 +5,15 @@ using UnityEngine.AI;
 public class EnemyAI : MonoBehaviour
 {
     private Transform target; // Target to chase (usually the player)
-    public float chaseRange = 10f; // Range within which the enemy will chase the target
     public float attackRange = 2f; // Range within which the enemy will attack the target
+    public float rangedAttackRange = 10f; // Range within which the enemy will attack the target from range
     public float movementSpeed = 5f; // Speed at which the enemy moves
     public float rotationSpeed = 5f; // Speed at which the enemy rotates towards the target
     public int damage = 5;
+
+    public GameObject energyBallPrefab; // Prefab of the energy ball
+    public Transform energyBallSpawnPoint; // Point from which the energy balls will be spawned
+    public bool performRangedAttack = false; // Whether to perform ranged attacks
 
     public Transform childToMatch;
     private NavMeshAgent navMeshAgent;
@@ -21,6 +25,7 @@ public class EnemyAI : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         target = GameManager.Instance.player.transform;
+        navMeshAgent.speed = movementSpeed;
     }
 
     void Update()
@@ -37,29 +42,41 @@ public class EnemyAI : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
 
-        // Attack if within attack range
-        if (distanceToTarget <= attackRange)
+        // Attack based on attack type and distance
+        if (performRangedAttack && distanceToTarget <= rangedAttackRange)
         {
-            // Perform attack
+            // Perform ranged attack
+            animator.SetBool("rangedAttack", true);
+            //ShootEnergyBall();
+            navMeshAgent.isStopped = true;
+        }
+        else if (!performRangedAttack && distanceToTarget <= attackRange)
+        {
+            // Perform melee attack
             animator.SetBool("attack", true);
             navMeshAgent.isStopped = true;
-            // Add attack logic here
         }
         else
         {
             navMeshAgent.isStopped = false;
-            navMeshAgent.SetDestination(target.position);
             animator.SetBool("isWalking", true);
             animator.SetBool("attack", false);
+            animator.SetBool("rangedAttack", false);
         }
-        
-        //else
-        //{
-        //    // Stop moving if target is out of range
-        //    navMeshAgent.SetDestination(transform.position);
-        //    animator.SetBool("isWalking", false);
-        //    animator.SetBool("attack", false);
-        //}
+    }
+    public void ShootEnergyBall()
+    {
+        // Instantiate the energy ball prefab at the spawn point
+        GameObject energyBall = Instantiate(energyBallPrefab, energyBallSpawnPoint.position, Quaternion.identity);
+        // Calculate the direction towards the player
+        Vector3 direction = (target.position + new Vector3(0,1,0) - energyBall.transform.position).normalized;
+
+        Rigidbody rb = energyBall.GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        // Set the velocity of the energy ball to shoot towards the player
+        rb.AddForce(direction * 30f, ForceMode.VelocityChange); // Adjust the speed as needed
+        // Destroy the energy ball after a certain time to prevent cluttering the scene
+        //Destroy(energyBall, 3f); // Adjust the time as needed
     }
     public void DealDamage()
     {
