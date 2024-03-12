@@ -1743,8 +1743,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackRange: 2
   rangedAttackRange: 17
-  movementSpeed: 8
-  rotationSpeed: 8
+  movementSpeed: 6
+  rotationSpeed: 6
   damage: 5
   energyBallPrefab: {fileID: 9170510028542880364, guid: 14cdb5c6301d7444a89714eca1a5b530,
     type: 3}

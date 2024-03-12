@@ -18,6 +18,7 @@ public class EnemyAI : MonoBehaviour
     public Transform childToMatch;
     private NavMeshAgent navMeshAgent;
     private Animator animator;
+    private float distanceToTarget;
     private bool dead = false;
 
     void Start()
@@ -32,7 +33,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (dead || !navMeshAgent.enabled) return;
 
-        float distanceToTarget = Vector3.Distance(transform.position, target.position);
+        distanceToTarget = Vector3.Distance(transform.position, target.position);
 
         navMeshAgent.SetDestination(target.position);
         animator.SetBool("isWalking", true);
@@ -56,7 +57,10 @@ public class EnemyAI : MonoBehaviour
             animator.SetBool("attack", true);
             navMeshAgent.isStopped = true;
         }
-        else
+    }
+    public void FinishAttack()
+    {
+        if (!(performRangedAttack && distanceToTarget <= rangedAttackRange) && !(!performRangedAttack && distanceToTarget <= attackRange))
         {
             navMeshAgent.isStopped = false;
             animator.SetBool("isWalking", true);
@@ -76,7 +80,7 @@ public class EnemyAI : MonoBehaviour
         // Set the velocity of the energy ball to shoot towards the player
         rb.AddForce(direction * 30f, ForceMode.VelocityChange); // Adjust the speed as needed
         // Destroy the energy ball after a certain time to prevent cluttering the scene
-        //Destroy(energyBall, 3f); // Adjust the time as needed
+        Destroy(energyBall, 4f); // Adjust the time as needed
     }
     public void DealDamage()
     {

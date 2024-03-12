@@ -10,8 +10,7 @@ public class EnergyBall : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             GameManager.Instance.player.GetComponent<PlayerHealth>().TakeDamage(5);
-            Destroy(gameObject);
-            
         }
+            Destroy(gameObject);
     }
 }

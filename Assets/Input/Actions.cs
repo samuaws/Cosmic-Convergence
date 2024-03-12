@@ -62,6 +62,15 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""91455612-84a3-423e-a5ed-370d6f459c1d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -108,6 +117,17 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Wormhole"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0769c509-8d54-439b-bbbd-84fdd00414de"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -120,6 +140,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         m_Abelities_CastSpell = m_Abelities.FindAction("CastSpell", throwIfNotFound: true);
         m_Abelities_Blackhole = m_Abelities.FindAction("Blackhole", throwIfNotFound: true);
         m_Abelities_Wormhole = m_Abelities.FindAction("Wormhole", throwIfNotFound: true);
+        m_Abelities_Dash = m_Abelities.FindAction("Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -185,6 +206,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Abelities_CastSpell;
     private readonly InputAction m_Abelities_Blackhole;
     private readonly InputAction m_Abelities_Wormhole;
+    private readonly InputAction m_Abelities_Dash;
     public struct AbelitiesActions
     {
         private @Actions m_Wrapper;
@@ -193,6 +215,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         public InputAction @CastSpell => m_Wrapper.m_Abelities_CastSpell;
         public InputAction @Blackhole => m_Wrapper.m_Abelities_Blackhole;
         public InputAction @Wormhole => m_Wrapper.m_Abelities_Wormhole;
+        public InputAction @Dash => m_Wrapper.m_Abelities_Dash;
         public InputActionMap Get() { return m_Wrapper.m_Abelities; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -214,6 +237,9 @@ public partial class @Actions: IInputActionCollection2, IDisposable
             @Wormhole.started += instance.OnWormhole;
             @Wormhole.performed += instance.OnWormhole;
             @Wormhole.canceled += instance.OnWormhole;
+            @Dash.started += instance.OnDash;
+            @Dash.performed += instance.OnDash;
+            @Dash.canceled += instance.OnDash;
         }
 
         private void UnregisterCallbacks(IAbelitiesActions instance)
@@ -230,6 +256,9 @@ public partial class @Actions: IInputActionCollection2, IDisposable
             @Wormhole.started -= instance.OnWormhole;
             @Wormhole.performed -= instance.OnWormhole;
             @Wormhole.canceled -= instance.OnWormhole;
+            @Dash.started -= instance.OnDash;
+            @Dash.performed -= instance.OnDash;
+            @Dash.canceled -= instance.OnDash;
         }
 
         public void RemoveCallbacks(IAbelitiesActions instance)
@@ -253,5 +282,6 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         void OnCastSpell(InputAction.CallbackContext context);
         void OnBlackhole(InputAction.CallbackContext context);
         void OnWormhole(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
     }
 }

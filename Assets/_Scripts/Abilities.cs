@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem.XR;
+using System.Collections;
 
 public class Abilities : MonoBehaviour
 {
@@ -9,6 +11,7 @@ public class Abilities : MonoBehaviour
 
     private Camera cam;
     private GameObject abilityPlaceholder;
+    private CharacterController controller;
     private bool casting = false;
 
     public float supernovaCooldown = 2f;
@@ -21,6 +24,12 @@ public class Abilities : MonoBehaviour
     public GameObject blackholePlaceholder;
     public GameObject hands;
     private Animator handsAnimator;
+
+    public float dashSpeed = 10f;
+    public float dashDuration = 0.5f;
+    public float dashCooldown = 3f;
+    private bool isDashing = false;
+    private bool canDash = true;
 
     private GameObject spellToSpawn;
     private Spells spellToCast;
@@ -46,6 +55,7 @@ public class Abilities : MonoBehaviour
     {
         cam = Camera.main;
         handsAnimator = hands.GetComponent<Animator>();
+        controller = GetComponent<CharacterController>();
         InitializeCooldowns();
     }
 
@@ -204,5 +214,33 @@ public class Abilities : MonoBehaviour
                 ToggleCasting();
             }
         }
+    }
+    public void StartDash()
+    {
+        if (canDash)
+        {
+            Vector3 dashDirection = new Vector3(controller.velocity.normalized.x, 0, controller.velocity.normalized.z);
+            StartCoroutine(DoDash(dashDirection));
+        }
+    }
+
+    private IEnumerator DoDash(Vector3 direction)
+    {
+        isDashing = true;
+        canDash = false;
+
+        // Apply dash velocity
+        float startTime = Time.time;
+        while (Time.time < startTime + dashDuration)
+        {
+            controller.Move(direction * dashSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        isDashing = false;
+
+        // Cooldown before the next dash can be performed
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;
     }
 }

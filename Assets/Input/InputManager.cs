@@ -14,6 +14,7 @@ public class InputManager : MonoBehaviour
         actions.Enable();
         actions.Abelities.CastSpell.performed += _ => abilities.CastAbility(); 
         actions.Abelities.Supernova.performed += _ => abilities.Supernova(); 
-        actions.Abelities.Blackhole.performed += _ => abilities.Blackhole(); 
+        actions.Abelities.Blackhole.performed += _ => abilities.Blackhole();
+        actions.Abelities.Dash.performed += _ => abilities.StartDash();
     }
 }
