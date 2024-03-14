@@ -38,6 +38,8 @@ public class Abilities : MonoBehaviour
     private float spellDuration;
     private float[] abilityCooldowns;
     private string handsTrigger;
+    private AudioSource audioSource;
+    public AudioClip dashSound;
 
     public TextMeshProUGUI supernovaCooldownText;
     public TextMeshProUGUI blackholeCooldownText;
@@ -56,6 +58,7 @@ public class Abilities : MonoBehaviour
         cam = Camera.main;
         handsAnimator = hands.GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
+        audioSource = GetComponent<AudioSource>();
         InitializeCooldowns();
     }
 
@@ -135,7 +138,7 @@ public class Abilities : MonoBehaviour
         if (abilityCooldowns[spellIndex] > Time.time)
         {
             float remainingTime = abilityCooldowns[spellIndex] - Time.time;
-            cooldownText.text = "Cooldown: " + Mathf.CeilToInt(remainingTime).ToString();
+            cooldownText.text = Mathf.CeilToInt(remainingTime).ToString();
         }
         else
         {
@@ -228,6 +231,9 @@ public class Abilities : MonoBehaviour
     {
         isDashing = true;
         canDash = false;
+
+        audioSource.clip = dashSound;
+        audioSource.Play();
 
         // Apply dash velocity
         float startTime = Time.time;

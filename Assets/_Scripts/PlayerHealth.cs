@@ -36,7 +36,8 @@ public class PlayerHealth : MonoBehaviour
     // Method to handle player death
     private void Die()
     {
-        Debug.Log("Player has died.");
+
+        GameManager.Instance.GameOver();
     }
 
     // Method to update the health bar UI

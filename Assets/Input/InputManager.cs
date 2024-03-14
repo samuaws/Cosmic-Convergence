@@ -16,5 +16,6 @@ public class InputManager : MonoBehaviour
         actions.Abelities.Supernova.performed += _ => abilities.Supernova(); 
         actions.Abelities.Blackhole.performed += _ => abilities.Blackhole();
         actions.Abelities.Dash.performed += _ => abilities.StartDash();
+        actions.Abelities.Pause.performed += _ => GameManager.Instance.TogglePause();
     }
 }

@@ -71,13 +71,22 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""1fdd6d29-dc3d-4acc-97ea-e78b0b414be8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""03c2cf60-8186-4630-b8dc-ed3debbd96de"",
-                    ""path"": ""<Keyboard>/1"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -99,7 +108,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""ed6d457b-1d21-4b6c-837b-31b41e12d01d"",
-                    ""path"": ""<Keyboard>/2"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -128,6 +137,17 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1113740e-f9e8-4844-988e-1cfd525469bf"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -141,6 +161,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         m_Abelities_Blackhole = m_Abelities.FindAction("Blackhole", throwIfNotFound: true);
         m_Abelities_Wormhole = m_Abelities.FindAction("Wormhole", throwIfNotFound: true);
         m_Abelities_Dash = m_Abelities.FindAction("Dash", throwIfNotFound: true);
+        m_Abelities_Pause = m_Abelities.FindAction("Pause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -207,6 +228,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Abelities_Blackhole;
     private readonly InputAction m_Abelities_Wormhole;
     private readonly InputAction m_Abelities_Dash;
+    private readonly InputAction m_Abelities_Pause;
     public struct AbelitiesActions
     {
         private @Actions m_Wrapper;
@@ -216,6 +238,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         public InputAction @Blackhole => m_Wrapper.m_Abelities_Blackhole;
         public InputAction @Wormhole => m_Wrapper.m_Abelities_Wormhole;
         public InputAction @Dash => m_Wrapper.m_Abelities_Dash;
+        public InputAction @Pause => m_Wrapper.m_Abelities_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Abelities; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -240,6 +263,9 @@ public partial class @Actions: IInputActionCollection2, IDisposable
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
         }
 
         private void UnregisterCallbacks(IAbelitiesActions instance)
@@ -259,6 +285,9 @@ public partial class @Actions: IInputActionCollection2, IDisposable
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
         }
 
         public void RemoveCallbacks(IAbelitiesActions instance)
@@ -283,5 +312,6 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         void OnBlackhole(InputAction.CallbackContext context);
         void OnWormhole(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
 }

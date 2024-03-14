@@ -9,7 +9,7 @@ public class EnemyAI : MonoBehaviour
     public float rangedAttackRange = 10f; // Range within which the enemy will attack the target from range
     public float movementSpeed = 5f; // Speed at which the enemy moves
     public float rotationSpeed = 5f; // Speed at which the enemy rotates towards the target
-    public int damage = 5;
+    public int damage = 10;
 
     public GameObject energyBallPrefab; // Prefab of the energy ball
     public Transform energyBallSpawnPoint; // Point from which the energy balls will be spawned
@@ -18,13 +18,20 @@ public class EnemyAI : MonoBehaviour
     public Transform childToMatch;
     private NavMeshAgent navMeshAgent;
     private Animator animator;
+    private AudioSource audioSource;
     private float distanceToTarget;
     private bool dead = false;
+
+    public AudioClip spawnSound;
+    public AudioClip attackSound;
 
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = spawnSound;
+        audioSource.Play();
         target = GameManager.Instance.player.transform;
         navMeshAgent.speed = movementSpeed;
     }
@@ -32,6 +39,7 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         if (dead || !navMeshAgent.enabled) return;
+        print(target.name);
 
         distanceToTarget = Vector3.Distance(transform.position, target.position);
 
@@ -88,6 +96,8 @@ public class EnemyAI : MonoBehaviour
         if (distanceToTarget <= attackRange)
         {
             GameManager.Instance.player.GetComponent<PlayerHealth>().TakeDamage(damage);
+            audioSource.clip = attackSound;
+            audioSource.Play();
         }
     }
     public void StopFollow()

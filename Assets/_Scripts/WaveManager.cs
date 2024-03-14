@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 
 public class WaveManager : MonoBehaviour
 {
@@ -15,14 +16,25 @@ public class WaveManager : MonoBehaviour
     private int currentWave = 0; // Current wave number
     private bool isWaveInProgress = false; // Flag to track if a wave is currently in progress
     private List<GameObject> activeEnemies = new List<GameObject>(); // List to store active enemies
+    public GameObject waveEndedUI;
+    public TextMeshProUGUI waveNumberText;
+    public TextMeshProUGUI enemyStatsText;
+    public TextMeshProUGUI hudWave;
+    private int totalEnemies;
 
     private void Awake()
     {
         instance = this;
     }
+
     void Start()
     {
         StartCoroutine(SpawnWaves());
+    }
+    void Update()
+    {
+        enemyStatsText.text = (totalEnemies - activeEnemies.Count).ToString() + "/" + totalEnemies.ToString();
+        hudWave.text = "Wave " + currentWave.ToString();
     }
 
     IEnumerator SpawnWaves()
@@ -35,11 +47,36 @@ public class WaveManager : MonoBehaviour
             Debug.Log("Wave " + currentWave + " started!");
 
             isWaveInProgress = true;
-            SpawnEnemies();
+
+            if (currentWave == 1) // First wave only spawns melee enemies
+            {
+                SpawnFirstWave();
+            }
+            else // Subsequent waves spawn both melee and ranged enemies
+            {
+                SpawnEnemies();
+            }
+
             yield return new WaitUntil(() => AllEnemiesDestroyed());
             isWaveInProgress = false;
-
+            int nextwave = currentWave + 1;
+            waveNumberText.text = nextwave.ToString();
+            waveEndedUI.SetActive(true);
             yield return new WaitForSeconds(timeBetweenWaves);
+            waveEndedUI.SetActive(false);
+        }
+    }
+
+    void SpawnFirstWave()
+    {
+        activeEnemies.Clear(); // Clear the list before spawning new enemies
+        int numSpawnPoints = Mathf.Min(currentWave + 6, spawnPoints.Count); // Determine number of spawn points for this wave
+        totalEnemies = numSpawnPoints;
+        enemyStatsText.gameObject.SetActive(true);
+        for (int i = 0; i < numSpawnPoints; i++)
+        {
+            GameObject enemy = Instantiate(meleeEnemyPrefab, spawnPoints[i].position, spawnPoints[i].rotation);
+            activeEnemies.Add(enemy); // Add spawned enemy to the list
         }
     }
 
@@ -47,12 +84,15 @@ public class WaveManager : MonoBehaviour
     {
         activeEnemies.Clear(); // Clear the list before spawning new enemies
         bool spawnRangedEnemy = true; // Flag to alternate between ranged and non-ranged enemies
-        foreach (Transform spawnPoint in spawnPoints)
+
+        int numSpawnPoints = Mathf.Min(currentWave + 6, spawnPoints.Count); // Determine number of spawn points for this wave
+        totalEnemies = numSpawnPoints;
+        for (int i = 0; i < numSpawnPoints; i++)
         {
-            for (int i = 0; i < enemiesPerWave; i++)
+            for (int j = 0; j < enemiesPerWave; j++)
             {
                 GameObject enemyPrefab = spawnRangedEnemy ? rangedEnemyPrefab : meleeEnemyPrefab;
-                GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+                GameObject enemy = Instantiate(enemyPrefab, spawnPoints[i].position, spawnPoints[i].rotation);
                 activeEnemies.Add(enemy); // Add spawned enemy to the list
                 spawnRangedEnemy = !spawnRangedEnemy; // Switch between ranged and non-ranged enemies
             }

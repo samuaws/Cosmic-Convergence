@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class EnergyBall : MonoBehaviour
 {
+    public AudioSource audioSource;
+    private void Start()
+    {
+        audioSource.Play();
+    }
     private void OnCollisionEnter(Collision collision)
     {
         print(collision.gameObject.name);
